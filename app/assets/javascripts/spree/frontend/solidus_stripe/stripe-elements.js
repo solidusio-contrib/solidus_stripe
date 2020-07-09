@@ -2,7 +2,7 @@ SolidusStripe.Elements = function() {
   SolidusStripe.Payment.call(this);
 
   this.form = this.element.parents('form');
-  this.errorElement = this.form.find('#card-errors');
+  this.errorElement = this.form.find('#stripe_card_errors');
   this.submitButton = this.form.find('input[type="submit"]');
 };
 
@@ -19,13 +19,13 @@ SolidusStripe.Elements.prototype.init = function() {
 
 SolidusStripe.Elements.prototype.initElements = function() {
   var cardExpiry = this.elements.create('cardExpiry', this.cardExpiryElementOptions());
-  cardExpiry.mount('#card_expiry');
+  cardExpiry.mount('#stripe_card_expiry');
 
   var cardCvc = this.elements.create('cardCvc', this.cardCvcElementOptions());
-  cardCvc.mount('#card_cvc');
+  cardCvc.mount('#stripe_card_cvc');
 
   this.cardNumber = this.elements.create('cardNumber', this.cardNumberElementOptions());
-  this.cardNumber.mount('#card_number');
+  this.cardNumber.mount('#stripe_card_number');
 
   this.form.bind('submit', this.onFormSubmit.bind(this));
 

@@ -1,7 +1,7 @@
 SolidusStripe.CartPageCheckout = function() {
   SolidusStripe.Payment.call(this);
 
-  this.errorElement = $('#card-errors');
+  this.errorElement = $('#stripe_card_errors');
 };
 
 SolidusStripe.CartPageCheckout.prototype = Object.create(SolidusStripe.Payment.prototype);
