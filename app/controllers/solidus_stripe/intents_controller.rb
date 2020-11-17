@@ -19,7 +19,7 @@ module SolidusStripe
       if create_payment_service.call
         render json: { success: true }
       else
-        render json: { error: "Could not create payment" }, status: 500
+        render json: { error: "Could not create payment" }, status: :internal_server_error
       end
     end
 
@@ -31,21 +31,24 @@ module SolidusStripe
 
     def generate_payment_response
       response = @intent.params
+      status = response['status']
       # Note that if your API version is before 2019-02-11, 'requires_action'
       # appears as 'requires_source_action'.
-      if %w[requires_source_action requires_action].include?(response['status']) && response['next_action']['type'] == 'use_stripe_sdk'
+      require_action_list = %w[requires_source_action requires_action]
+
+      if require_action_list.include?(status) && response['next_action']['type'] == 'use_stripe_sdk'
         render json: {
           requires_action: true,
           stripe_payment_intent_client_secret: response['client_secret']
         }
-      elsif response['status'] == 'requires_capture'
+      elsif status == 'requires_capture'
         render json: {
           success: true,
           requires_capture: true,
           stripe_payment_intent_id: response['id']
         }
       else
-        render json: { error: response['error']['message'] }, status: 500
+        render json: { error: response['error']['message'] }, status: :internal_server_error
       end
     end
 

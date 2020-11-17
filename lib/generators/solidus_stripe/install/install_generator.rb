@@ -10,10 +10,6 @@ module SolidusStripe
       end
 
       def add_migrations
-        run 'bundle exec rake railties:install:migrations FROM=solidus_stripe'
-      end
-
-      def add_migrations
         run 'bin/rails railties:install:migrations FROM=solidus_stripe'
       end
 

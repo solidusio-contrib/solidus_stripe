@@ -39,7 +39,7 @@ module SolidusStripe
     end
 
     def country
-      @country ||= Spree::Country.find_by_iso(address_params[:country])
+      @country ||= Spree::Country.find_by(iso: address_params[:country])
     end
 
     def state

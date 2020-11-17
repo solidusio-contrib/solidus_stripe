@@ -31,7 +31,7 @@ RSpec.describe SolidusStripe::PrepareOrderForPaymentService do
 
     it "sets the order ship and bill address" do
       expect { subject }.to change { order.ship_address }.to(address)
-        .and change { order.bill_address }.to(address)
+                                                         .and change { order.bill_address }.to(address)
     end
 
     context "when the user is not logged in" do
@@ -58,7 +58,7 @@ RSpec.describe SolidusStripe::PrepareOrderForPaymentService do
       before { order.line_items.destroy_all }
 
       it "leaves the order to a previous state" do
-        expect { subject }.not_to change { order.state }
+        expect { subject }.not_to change(order, :state)
       end
     end
   end

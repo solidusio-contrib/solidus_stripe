@@ -25,9 +25,9 @@ module Spree
     end
 
     def paying_with_stripe_intents?
-      if id = payments_attributes.first&.dig(:payment_method_id)
-        stripe_intents?(Spree::PaymentMethod.find(id))
-      end
+      return unless id = payments_attributes.first&.dig(:payment_method_id)
+
+      stripe_intents?(Spree::PaymentMethod.find(id))
     end
 
     def stripe_intents?(payment_method)

@@ -1,7 +1,15 @@
 require:
   - solidus_dev_support/rubocop
-
 AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.4
+Layout/LineLength:
   Exclude:
-    - sandbox/**/*
-    - spec/dummy/**/*
+    - db/migrate/*.rb
+Rails/Output:
+  Exclude:
+    - db/seeds.rb
+Rails/SkipsModelValidations:
+  Enabled: false
+RSpec:
+  Enabled: false

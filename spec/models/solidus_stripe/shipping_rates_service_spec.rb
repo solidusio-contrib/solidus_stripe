@@ -25,7 +25,7 @@ RSpec.describe SolidusStripe::ShippingRatesService do
   let(:ca_warehouse) { create(:stock_location, name: "CA Warehouse", shipping_methods: [air_mail]) }
 
   before do
-    2.times { create :inventory_unit, order: order }
+    create_list :inventory_unit, 2, order: order
     Spree::StockLocation.update_all backorderable_default: false
     Spree::StockItem.find_by(stock_location: fl_warehouse, variant: order.variants.first).set_count_on_hand(1)
     Spree::StockItem.find_by(stock_location: ca_warehouse, variant: order.variants.last).set_count_on_hand(1)

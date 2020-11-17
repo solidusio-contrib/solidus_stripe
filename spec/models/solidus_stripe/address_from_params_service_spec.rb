@@ -14,7 +14,7 @@ RSpec.describe SolidusStripe::AddressFromParamsService do
         recipient: 'Clark Kent',
         city: 'Metropolis',
         postalCode: '12345',
-        addressLine: [ '12, Lincoln Rd'],
+        addressLine: ['12, Lincoln Rd'],
         phone: '555-555-0199'
       }
     end
@@ -36,12 +36,12 @@ RSpec.describe SolidusStripe::AddressFromParamsService do
         before do
           user.addresses << create(
             :address, city: params[:city],
-            zipcode: params[:postalCode],
-            firstname: 'Clark',
-            lastname: 'Kent',
-            address1: params[:addressLine].first,
-            address2: nil,
-            phone: '555-555-0199'
+                      zipcode: params[:postalCode],
+                      firstname: 'Clark',
+                      lastname: 'Kent',
+                      address1: params[:addressLine].first,
+                      address2: nil,
+                      phone: '555-555-0199'
           )
         end
 

@@ -463,12 +463,10 @@ RSpec.describe "Stripe checkout", type: :feature do
     it_behaves_like "Stripe Elements invalid payments"
   end
 
-  def within_3d_secure_modal
+  def within_3d_secure_modal(&block)
     within_frame find("iframe[src*='authorize-with-url-inner']") do
       within_frame "__stripeJSChallengeFrame" do
-        within_frame "acsFrame" do
-          yield
-        end
+        within_frame "acsFrame", &block
       end
     end
   end

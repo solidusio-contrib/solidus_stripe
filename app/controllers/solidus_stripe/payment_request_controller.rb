@@ -14,7 +14,8 @@ module SolidusStripe
       if rates.any?
         render json: { success: true, shipping_rates: rates }
       else
-        render json: { success: false, error: 'No shipping method available for that address' }, status: 500
+        render json: { success: false, error: 'No shipping method available for that address' },
+               status: :internal_server_error
       end
     end
 
@@ -32,10 +33,11 @@ module SolidusStripe
         if current_order.payment?
           render json: { success: true }
         else
-          render json: { success: false, error: 'Order not ready for payment. Try manual checkout.' }, status: 500
+          render json: { success: false, error: 'Order not ready for payment. Try manual checkout.' },
+                 status: :internal_server_error
         end
       else
-        render json: { success: false, error: address.errors.full_messages.to_sentence }, status: 500
+        render json: { success: false, error: address.errors.full_messages.to_sentence }, status: :internal_server_error
       end
     end
 

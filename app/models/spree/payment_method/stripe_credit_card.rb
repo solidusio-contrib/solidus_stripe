@@ -13,7 +13,7 @@ module Spree
         'American Express' => 'american_express',
         'Diners Club' => 'diners_club',
         'Visa' => 'visa'
-      }
+      }.freeze
 
       delegate :create_intent, :update_intent, :confirm_intent, :show_intent, to: :gateway
 
@@ -22,14 +22,16 @@ module Spree
           id: id,
           publishable_key: preferred_publishable_key
         }.tap do |config|
-          config.merge!(
-            payment_request: {
-              country: preferred_stripe_country,
-              currency: order.currency.downcase,
-              label: "Payment for order #{order.number}",
-              amount: (order.total * 100).to_i
-            }
-          ) if payment_request?
+          if payment_request?
+            config.merge!(
+              payment_request: {
+                country: preferred_stripe_country,
+                currency: order.currency.downcase,
+                label: "Payment for order #{order.number}",
+                amount: (order.total * 100).to_i
+              }
+            )
+          end
         end
       end
 
@@ -69,9 +71,7 @@ module Spree
         gateway.authorize(*options_for_purchase_or_auth(money, creditcard, transaction_options))
       end
 
-      def capture(money, response_code, transaction_options)
-        gateway.capture(money, response_code, transaction_options)
-      end
+      delegate :capture, to: :gateway
 
       def credit(money, _creditcard, response_code, _transaction_options)
         gateway.refund(money, response_code, {})
@@ -110,11 +110,12 @@ module Spree
 
         source = update_source!(payment.source)
         if source.number.blank? && source.gateway_payment_profile_id.present?
-          if v3_intents?
-            creditcard = ActiveMerchant::Billing::StripeGateway::StripePaymentToken.new('id' => source.gateway_payment_profile_id)
-          else
-            creditcard = source.gateway_payment_profile_id
-          end
+          creditcard =
+            if v3_intents?
+              ActiveMerchant::Billing::StripeGateway::StripePaymentToken.new('id' => source.gateway_payment_profile_id)
+            else
+              source.gateway_payment_profile_id
+            end
         else
           creditcard = source
         end

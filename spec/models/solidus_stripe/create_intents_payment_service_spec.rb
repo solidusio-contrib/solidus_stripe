@@ -38,23 +38,23 @@ RSpec.describe SolidusStripe::CreateIntentsPaymentService do
 
   let(:intent) do
     double(params: {
-      "id" => intent_id,
-      "charges" => {
-        "data" => [{
-          "billing_details" => {
-            "name" => "John Doe"
-          },
-          "payment_method_details" => {
-            "card" => {
-              "brand" => "visa",
-              "exp_month" => 1,
-              "exp_year" => 2022,
-              "last4" => "4242"
-            },
-          }
-        }]
-      }
-    })
+             "id" => intent_id,
+             "charges" => {
+               "data" => [{
+                 "billing_details" => {
+                   "name" => "John Doe"
+                 },
+                 "payment_method_details" => {
+                   "card" => {
+                     "brand" => "visa",
+                     "exp_month" => 1,
+                     "exp_year" => 2022,
+                     "last4" => "4242"
+                   },
+                 }
+               }]
+             }
+           })
   end
 
   describe '#call' do
@@ -69,12 +69,12 @@ RSpec.describe SolidusStripe::CreateIntentsPaymentService do
     it { expect(subject).to be true }
 
     it "creates a new pending payment" do
-      expect { subject }.to change { order.payments.count }
+      expect { subject }.to change(order.payments, :count)
       expect(order.payments.last.reload).to be_pending
     end
 
     it "creates a credit card with the correct information" do
-      expect { subject }.to change { Spree::CreditCard.count }
+      expect { subject }.to change(Spree::CreditCard, :count)
       card = Spree::CreditCard.last
 
       aggregate_failures do
@@ -119,7 +119,7 @@ RSpec.describe SolidusStripe::CreateIntentsPaymentService do
 
       context "when none is a Payment Intent" do
         it "does not invalidate them" do
-          expect { subject }.not_to change { payment.reload.state }
+          expect { subject }.not_to change(payment.reload, :state)
         end
       end
     end

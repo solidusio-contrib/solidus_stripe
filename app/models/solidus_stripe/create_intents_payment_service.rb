@@ -33,9 +33,9 @@ module SolidusStripe
     end
 
     def invalidate_previous_payment_intents_payments
-      if stripe.v3_intents?
-        current_order.payments.pending.where(payment_method: stripe).each(&:void_transaction!)
-      end
+      return unless stripe.v3_intents?
+
+      current_order.payments.pending.where(payment_method: stripe).find_each(&:void_transaction!)
     end
 
     def create_payment
@@ -98,7 +98,8 @@ module SolidusStripe
     end
 
     def address_attributes
-      html_payment_source_data['address_attributes'] || SolidusStripe::AddressFromParamsService.new(form_data).call.attributes
+      html_payment_source_data['address_attributes'] ||
+      SolidusStripe::AddressFromParamsService.new(form_data).call.attributes
     end
 
     def address_full_name
