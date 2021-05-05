@@ -21,8 +21,9 @@ Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
 # Requires factories defined in lib/solidus_stripe/testing_support/factories.rb
 SolidusDevSupport::TestingSupport::Factories.load_for(SolidusStripe::Engine)
 
-# Requires card input helper defined in lib/solidus_stripe/testing_support/card_input_helper.rb
+# Requires helpers defined in lib/solidus_stripe/testing_support
 require 'solidus_stripe/testing_support/card_input_helper'
+require 'solidus_stripe/testing_support/stripe_checkout_helper'
 
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
@@ -30,6 +31,7 @@ RSpec.configure do |config|
 
   config.include SolidusAddressNameHelper, type: :feature
   config.include SolidusCardInputHelper, type: :feature
+  config.include StripeCheckoutHelper, type: :feature
 
   if Spree.solidus_gem_version < Gem::Version.new('2.11')
     config.extend Spree::TestingSupport::AuthorizationHelpers::Request, type: :system

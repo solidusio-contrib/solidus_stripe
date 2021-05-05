@@ -23,6 +23,10 @@ else
   gem 'sqlite3'
 end
 
+group :development, :test do
+  gem 'stripe'
+end
+
 gemspec
 
 # Use a local Gemfile to include development dependencies that might not be

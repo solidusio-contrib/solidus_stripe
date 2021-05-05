@@ -122,6 +122,14 @@ module Spree
           creditcard = source
         end
 
+        user_stripe_payment_sources = payment.source.user&.wallet&.wallet_payment_sources&.select do |wps|
+          wps.payment_source.payment_method.type == self.class.name
+        end
+        if user_stripe_payment_sources.present?
+          customer_id = user_stripe_payment_sources.map {|ps| ps.payment_source&.gateway_customer_profile_id }.compact.last
+          options[:customer] = customer_id
+        end
+
         response = gateway.store(creditcard, options)
         if response.success?
           if v3_intents?
@@ -133,8 +141,8 @@ module Spree
           else
             payment.source.update!(
               cc_type: payment.source.cc_type,
-              gateway_customer_profile_id: response.params['id'],
-              gateway_payment_profile_id: response.params['default_source'] || response.params['default_card']
+              gateway_customer_profile_id: options[:customer] ? response.params['customer'] : response.params['id'],
+              gateway_payment_profile_id: options[:customer] ? response.params['id'] : response.params['default_source'] || response.params['default_card']
             )
           end
         else
