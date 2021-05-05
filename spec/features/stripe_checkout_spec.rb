@@ -123,31 +123,31 @@ RSpec.describe "Stripe checkout", type: :feature do
     end
 
     it "shows an error with a missing credit card number", js: true do
-      fill_in_card({ number: "", code: "" })
+      fill_in_card(number: "", code: "")
       click_button "Save and Continue"
       expect(page).to have_content("Could not find payment information")
     end
 
     it "shows an error with a missing expiration date", js: true do
-      fill_in_card({ exp_month: "", exp_year: "" })
+      fill_in_card(exp_month: "", exp_year: "")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's expiration year is invalid.")
     end
 
     it "shows an error with an invalid credit card number", js: true do
-      fill_in_card({ number: "1111 1111 1111 1111" })
+      fill_in_card(number: "1111 1111 1111 1111")
       click_button "Save and Continue"
       expect(page).to have_content("Your card number is incorrect.")
     end
 
     it "shows an error with invalid security fields", js: true do
-      fill_in_card({ code: "12" })
+      fill_in_card(code: "12")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's security code is invalid.")
     end
 
     it "shows an error with invalid expiry fields", js: true do
-      fill_in_card({ exp_month: "00" })
+      fill_in_card(exp_month: "00")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's expiration month is invalid.")
     end
@@ -155,31 +155,31 @@ RSpec.describe "Stripe checkout", type: :feature do
 
   shared_examples "Stripe Elements invalid payments" do
     it "shows an error with a missing credit card number" do
-      fill_in_card({ number: "" })
+      fill_in_card(number: "")
       click_button "Save and Continue"
       expect(page).to have_content("Your card number is incomplete.")
     end
 
     it "shows an error with a missing expiration date" do
-      fill_in_card({ exp_month: "", exp_year: "" })
+      fill_in_card(exp_month: "", exp_year: "")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's expiration date is incomplete.")
     end
 
     it "shows an error with an invalid credit card number" do
-      fill_in_card({ number: "1111 1111 1111 1111" })
+      fill_in_card(number: "1111 1111 1111 1111")
       click_button "Save and Continue"
       expect(page).to have_content("Your card number is invalid.")
     end
 
     it "shows an error with invalid security fields" do
-      fill_in_card({ code: "12" })
+      fill_in_card(code: "12")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's security code is incomplete.")
     end
 
     it "shows an error with invalid expiry fields" do
-      fill_in_card({ exp_month: "01", exp_year: "3" })
+      fill_in_card(exp_month: "01", exp_year: "3")
       click_button "Save and Continue"
       expect(page).to have_content("Your card's expiration date is incomplete.")
     end
@@ -299,7 +299,7 @@ RSpec.describe "Stripe checkout", type: :feature do
 
     context "when using a card without enough money" do
       it "fails the payment" do
-        fill_in_card({ number: "4000 0000 0000 9995" })
+        fill_in_card(number: "4000 0000 0000 9995")
         click_button "Save and Continue"
 
         expect(page).to have_content "Your card has insufficient funds."
@@ -308,7 +308,7 @@ RSpec.describe "Stripe checkout", type: :feature do
 
     context "when entering the wrong 3D verification code" do
       it "fails the payment" do
-        fill_in_card({ number: "4000 0084 0000 1629" })
+        fill_in_card(number: "4000 0084 0000 1629")
         click_button "Save and Continue"
 
         within_3d_secure_modal do
@@ -407,7 +407,7 @@ RSpec.describe "Stripe checkout", type: :feature do
         let(:regular_card) { "4242 4242 4242 4242" }
 
         it "voids the first stripe payment and successfully pays with 3DS card" do
-          fill_in_card({ number: regular_card })
+          fill_in_card(number: regular_card)
           click_button "Save and Continue"
 
           expect(page).to have_content "Ending in #{regular_card.last(4)}"
@@ -474,7 +474,7 @@ RSpec.describe "Stripe checkout", type: :feature do
   end
 
   def authenticate_3d_secure_card(card_number)
-    fill_in_card({ number: card_number })
+    fill_in_card(number: card_number)
     click_button "Save and Continue"
 
     within_3d_secure_modal do
